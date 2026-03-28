@@ -1,41 +1,35 @@
-class Job:
-    def __init__(self, job_list):
-        self.job_name = random.choice(list(job_list.keys()))
-        self.salary = job_list[self.job_name]["salary"]
-        self.gladness_less = job_list[self.job_name]["gladness_less"]
-
-class Human:
-    def __init__(self, name, job=None, home=None, car=None):
+class Product:
+    def __init__(self, name, price, quantity):
         self.name = name
-        self.money = 100
-        self.gladness = 50
-        self.satiety = 50
-        self.job = job
-        self.car = car
-        self.home = home
+        self.price = price
+        self.quantity = quantity
 
-    def get_job(self):
-        self.job = Job(job_list)
-        print(f"{self.name} отримав роботу: {self.job.job_name}, зарплата: {self.job.salary}")
+    def __str__(self):
+        return f"{self.name} — {self.price} грн, на складі: {self.quantity} шт."
 
-    def shopping(self):
-        if self.money >= 20:
-            self.gladness += 10
-            self.money -= 20
-            print(f"{self.name} зробив покупки. Гроші: {self.money}, gladness: {self.gladness}")
+class Cart:
+    def __init__(self):
+        self.items = []
+
+    def add_product(self, product, amount):
+        if amount <= product.quantity:
+            self.items.append((product, amount))
+            product.quantity -= amount
+            print(f"Додано {amount} шт. {product.name} до кошика")
         else:
-            print(f"{self.name} не вистачає грошей на покупки.")
+            print(f"Недостатньо {product.name} на складі")
 
-    def chill(self):
-        self.gladness += 15
-        print(f"{self.name} відпочиває. Gladness: {self.gladness}")
+    def show_cart(self):
+        print("\nКошик:")
+        for product, amount in self.items:
+            print(f"{product.name} — {amount} шт. ({product.price} грн/шт.)")
+        total = sum(product.price * amount for product, amount in self.items)
+        print(f"Загальна вартість: {total} грн\n")
 
-    def work(self):
-        if self.job:
-            self.money += self.job.salary
-            self.gladness -= self.job.gladness_less
-            print(f"{self.name} попрацював на {self.job.job_name}. Гроші: {self.money}, gladness: {self.gladness}")
-        else:
-            print(f"{self.name} ще не має роботи.")
+# Приклад використання
+p1 = Product("Ноутбук", 15000, 3)
+p2 = Product("Миша", 500, 10)
 
-nick = Human(name="Nick")
+cart = Cart()
+cart.add_product(p1, 1)
+cart.add_product(p2, 2)
